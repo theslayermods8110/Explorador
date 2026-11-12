@@ -3,37 +3,29 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - name: Ver archivos del repo
+        run: |
+          echo "=== ARCHIVOS ==="
+          find . -type f | head -n 100
+          echo "=== CSPROJ ==="
+          find . -name "*.csproj"
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-
-      - name: Install MAUI Android
+      - name: Install MAUI
         run: dotnet workload install maui-android
-
-      - name: Find csproj
-        id: find
-        run: |
-          CSPROJ=$(find . -name "*.csproj" -not -path "./obj/*" -not -path "./bin/*" | head -n 1)
-          echo "CSPROJ=$CSPROJ" >> $GITHUB_ENV
-          echo "Encontrado: $CSPROJ"
-
       - name: Restore
-        run: dotnet restore "$CSPROJ"
-
+        run: dotnet restore ExploradorV2/ExploradorV2.csproj
       - name: Build APK
-        run: dotnet publish "$CSPROJ" -c Release -f net9.0-android -p:AndroidPackageFormat=apk -p:AndroidKeyStore=false -o output
-
+        run: dotnet publish ExploradorV2/ExploradorV2.csproj -c Release -f net9.0-android -p:AndroidPackageFormat=apk -o output
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: ExploradorV2-APK
           path: output/*.apk
-          if-no-files-found: error
