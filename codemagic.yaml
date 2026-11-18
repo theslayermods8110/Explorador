@@ -1,29 +1,20 @@
 workflows:
-  maui-android:
-    name: MijuegoApk Android
-    max_build_duration: 60
+  unity-android:
+    name: Free Fire Clone Android
+    max_build_duration: 120
     instance_type: mac_mini_m1
     environment:
       xcode: latest
-      cocoapods: default
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: main
-          include: true
+      unity: 2022.3.20f1
+      groups:
+        - unity
     scripts:
-      - name: Instalar .NET y MAUI
+      - name: Activar licencia Unity
         script: |
-          dotnet workload install maui-android
-      - name: Restaurar y Compilar APK
+          unity -batchmode -quit -logFile -createManualActivationFile || true
+      - name: Compilar APK Unity
         script: |
-          dotnet restore MijuegoApk.csproj
-          dotnet publish MijuegoApk.csproj -f net8.0-android -c Release -o ./build
+          unity -batchmode -quit -logFile build.log -projectPath . -buildTarget Android -executeMethod BuildScript.BuildAndroid -nographics
     artifacts:
       - build/*.apk
       - build/*.aab
-    publishing:
-      email:
-        recipients:
-          - theslayermods8110@gmail.com
