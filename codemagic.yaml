@@ -2,19 +2,24 @@ workflows:
   unity-android:
     name: Free Fire Clone Android
     max_build_duration: 120
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m2
     environment:
       xcode: latest
-      unity: 2022.3.20f1
+      unity: 6000.0.37f1
       groups:
         - unity
     scripts:
       - name: Activar licencia Unity
         script: |
-          unity -batchmode -quit -logFile -createManualActivationFile || true
+          $UNITY_BIN -batchmode -quit -logFile -serial $UNITY_SERIAL -username $UNITY_EMAIL -password $UNITY_PASSWORD -nographics || true
       - name: Compilar APK Unity
         script: |
-          unity -batchmode -quit -logFile build.log -projectPath . -buildTarget Android -executeMethod BuildScript.BuildAndroid -nographics
+          $UNITY_BIN -batchmode -quit -logFile build.log -projectPath . -buildTarget Android -executeMethod BuildScript.BuildAndroid -nographics
     artifacts:
       - build/*.apk
       - build/*.aab
+    publishing:
+      scripts:
+        - name: Devolver licencia
+          script: |
+            $UNITY_BIN -batchmode -quit -returnlicense -nographics || true
