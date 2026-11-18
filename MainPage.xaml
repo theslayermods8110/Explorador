@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             x:Class="Explorador.MainPage"
+             BackgroundColor="Black">
+    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20">
+        <Label Text="EXPLORADOR" TextColor="Lime" FontSize="40" HorizontalOptions="Center" />
+        <Label Text="Tu juego Free Fire ya está corriendo!" TextColor="White" HorizontalOptions="Center" />
+        <Button Text="JUGAR" BackgroundColor="Lime" TextColor="Black" Clicked="OnJugarClicked" />
+        <Label x:Name="ResultadoLabel" Text="" TextColor="Yellow" HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>
